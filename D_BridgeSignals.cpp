@@ -1,23 +1,32 @@
 #include <iostream>
-#include <cmath>
-#include <cstring>
+#include <algorithm>
 using namespace std;
-int dp[40001][40001];
+int len;
+int dp[40001], ports[40001];
 
 int main() {
-    int n; cin >> n;
-    while (n--)
-    {
-        int p; cin >> p;
-        int i, j;
-        memset(dp, 0, sizeof(dp));
-        for (i = 1; i <= p; i++)
-        {
-             cin >> j;
-            if(abs(i-j) <= 1) dp[i][j] = dp[i-1][j-1] + 1;
-            dp[i][j] = max(dp[i-1][j], dp[i][j-1]);
+    int n;
+    cin >> n;
+    while (n--) {
+        int p;
+        cin >> p;
+        len = 1;       
+        for (int i = 1; i <= p; i++) {
+            cin >> ports[i];
         }
-        cout << dp[i][j] << endl;
+
+        dp[1] = ports[1];
+        for (int i = 2; i <= p; i++) {
+            if (ports[i]>=dp[len]) {
+                len++;
+                dp[len] = ports[i];
+            } else {
+                int pos = lower_bound(dp+1, dp+len+1, ports[i]) - dp;
+                dp[pos] = ports[i];
+            }
+        }
+        // cout << "\nans: ";
+        cout << len << endl;
     }
     return 0;
 }
