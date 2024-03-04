@@ -1,32 +1,39 @@
-#include <iostream>
+#include <stdio.h>
 #include <algorithm>
 using namespace std;
 int len;
 int dp[40001], ports[40001];
 
+int binary_search(int x) {
+    int left = 1, right = len;
+    while(right > left) {
+        int mid = left + (right-left)/2;    
+        if(dp[mid] > x) right = mid;
+        else left = mid + 1;
+    }
+    return left;
+}
+
 int main() {
     int n;
-    cin >> n;
+    scanf(" %d", &n);
     while (n--) {
         int p;
-        cin >> p;
-        len = 1;       
+        scanf(" %d", &p);
+        len = 0;       
         for (int i = 1; i <= p; i++) {
-            cin >> ports[i];
+            scanf(" %d", &ports[i]);
         }
-
-        dp[1] = ports[1];
-        for (int i = 2; i <= p; i++) {
+        for (int i = 1; i <= p; i++) {
             if (ports[i]>=dp[len]) {
                 len++;
                 dp[len] = ports[i];
             } else {
-                int pos = lower_bound(dp+1, dp+len+1, ports[i]) - dp;
+                int pos = binary_search(ports[i]);
                 dp[pos] = ports[i];
             }
         }
-        // cout << "\nans: ";
-        cout << len << endl;
+        printf("%d\n", len);
     }
     return 0;
 }
